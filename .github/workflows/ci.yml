@@ -1,4 +1,4 @@
-name: CI - Build and Test
+name: CI/CD - Build, Test and Push Docker Image
 
 on:
   push:
@@ -9,7 +9,9 @@ on:
       - main
 
 jobs:
-  build:
+
+  ci:
+    name: CI - Build and Test
     runs-on: ubuntu-latest
 
     steps:
@@ -28,3 +30,26 @@ jobs:
 
       - name: Verify WAR file
         run: ls -lh target/*.war
+
+  cd:
+    name: CD - Push Docker Image
+    needs: ci
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log in to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/gestion_g2_spring_mvc:latest
