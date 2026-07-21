@@ -21,7 +21,8 @@ public class AppConfig {
 
         BasicDataSource ds = new BasicDataSource();
         ds.setDriverClassName("org.postgresql.Driver");
-        ds.setUrl("jdbc:postgresql://localhost:5432/groupe2_mvc");
+        //ds.setUrl("jdbc:postgresql://localhost:5432/groupe2_mvc");
+        ds.setUrl("jdbc:postgresql://host.docker.internal:5432/groupe2_mvc");
         ds.setUsername("postgres");
         ds.setPassword("passer"); // adapte selon ton installation
 

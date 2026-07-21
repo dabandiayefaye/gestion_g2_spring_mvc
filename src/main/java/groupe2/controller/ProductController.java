@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import groupe2.entity.Type;
+import groupe2.service.TypeService;
 
 
 import java.util.List;
@@ -17,6 +19,8 @@ public class ProductController {
 
     @Autowired
     private ProductService productService;
+    @Autowired
+    private TypeService typeService;
 
     @GetMapping
     public String  getList(Model model){
@@ -26,7 +30,8 @@ public class ProductController {
     }
 
     @GetMapping("/new")
-    public String form(){
+    public String form(Model model){
+        model.addAttribute("types",typeService.findAll());
         return "form-product";
     }
 
@@ -46,6 +51,7 @@ public class ProductController {
     public String edit(@PathVariable Long id, Model model){
         Product product = productService.findById(id);
         model.addAttribute("product",product);
+        model.addAttribute("types",typeService.findAll());
         return "form-product";
     }
 

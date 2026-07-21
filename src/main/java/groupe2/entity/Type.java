@@ -2,32 +2,28 @@ package groupe2.entity;
 
 
 import javax.persistence.*;
-
+import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name = "products")
-public class Product {
-
+@Table(name = "types")
+public class Type {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String libelle;
 
-    private double prix;
+    @OneToMany(mappedBy = "type", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Product> products;
 
-    @ManyToOne
-    @JoinColumn(name = "type_id")
-    private Type type;
-
-    public Product() {
+    public Type() {
     }
 
-    public Product(Long id, String libelle, double prix, Type type) {
+    public Type(Long id, String libelle) {
         this.id = id;
         this.libelle = libelle;
-        this.prix = prix;
-        this.type= type;
     }
 
     public Long getId() {
@@ -46,24 +42,19 @@ public class Product {
         this.libelle = libelle;
     }
 
-    public double getPrix() {
-        return prix;
+    public List<Product> getProducts() {
+        return products;
     }
 
-    public void setPrix(double prix) {
-        this.prix = prix;
+    public void setProducts(List<Product> products) {
+        this.products = products;
     }
-
-    public Type getType(){return type;}
-    public void setType(Type type){this.type =type;}
 
     @Override
     public String toString() {
-        return "Product{" +
+        return "Type{" +
                 "id=" + id +
                 ", libelle='" + libelle + '\'' +
-                ", prix=" + prix +
-                ", type=" +(type != null ? type.getLibelle():null)+
                 '}';
     }
 }
